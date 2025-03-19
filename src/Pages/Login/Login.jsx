@@ -140,7 +140,7 @@ const Login = () => {
                   type="submit"
                   className="w-full bg-mainColor text-white p-2 rounded"
                 >
-                  {loading ? <CircularProgress size={25} /> : "Login"}
+                  {loading ? <Loading /> : "Login"}
                 </button>
             </form>
           </div>
