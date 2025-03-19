@@ -1,37 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../Utils/axiosInstance";
 
-const fetchUsers = createAsyncThunk(
-    "users/fetchUsers",
+const fetchShipments = createAsyncThunk(
+    "shipment/fetchShipments",
     async () => {
-        const response = await axiosInstance.get("/user");
+        const response = await axiosInstance.get("/shipment");
         return response.data;
     }
 )
-const usersSlice = createSlice({
-    name: "users",
+const shipmentSlice = createSlice({
+    name: "shipment",
     initialState: {
-        users: [],
+        shipments: [],
         loading: false,
         error: null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUsers.pending, (state) => {
+            .addCase(fetchShipments.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(fetchUsers.fulfilled, (state, action) => {
+            .addCase(fetchShipments.fulfilled, (state, action) => {
                 state.loading = false;
-                state.users = action.payload;
+                state.shipments = action.payload;
             })
-            .addCase(fetchUsers.rejected, (state, action) => {
+            .addCase(fetchShipments.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             });
     },
+});
 
-})
-export { fetchUsers };
-export default usersSlice.reducer;
+export default shipmentSlice.reducer;
+export { fetchShipments };
