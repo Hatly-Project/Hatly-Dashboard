@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/Slices/authSlice";
 import Loading from "../../Componente/Loading/Loading";
 import { CircularProgress } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Login = () => {
   const { loading, error } = useSelector((state) => state.auth);
@@ -20,6 +21,8 @@ const Login = () => {
   console.log("loading", loading);
   
   
+
+const Login = () => {
   const navigate = useNavigate();
   const disptch = useDispatch();
   const mySchema = yup.object({
@@ -49,12 +52,12 @@ const Login = () => {
        }
       );
     } else {
-     
-      navigate("LandingPage");
       toast.success("Success! Welcome To Hatly", {
         position: "top-center",
         autoClose: 1000,
       });
+      navigate("/LandingPage");
+      console.log("scucesssssssss");
     }
   }
 
