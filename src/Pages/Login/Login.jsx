@@ -4,8 +4,10 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../Utils/axiosInstance";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // import axios from "axios";
 const Login = () => {
+  const nvigation = useNavigate();
   // const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   const mySchema = yup.object({
     email: yup
@@ -26,6 +28,8 @@ const Login = () => {
     
     try {
       await axiosInstance.post("auth/login",values);
+      console.log("00000");
+      nvigation("/LandingPage");
     } catch (error) {
       console.error("Login error:", error);
     }
