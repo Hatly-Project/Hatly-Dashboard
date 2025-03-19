@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
+<<<<<<< Updated upstream
   baseURL: "https://hatly-api.onrender.com/api/v2",
   headers: {
     "Content-Type": "application/json",
@@ -16,6 +17,24 @@ axiosInstance.interceptors.request.use(
         ...config.data,
         refreshToken: refreshToken,
       }
+=======
+    baseURL: "https://hatly-api.onrender.com/api/v2",
+    headers: {
+        "Content-Type": "application/json",
+    }
+});
+
+axiosInstance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+>>>>>>> Stashed changes
     }
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -43,12 +62,20 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       const refreshToken = localStorage.getItem("refreshToken");
 
+<<<<<<< Updated upstream
       if (refreshToken) {
         try {
           const response = await axiosInstance.post("/auth/refresh", {
             refreshToken: refreshToken,
             token: localStorage.getItem("accessToken"),
           });
+=======
+                localStorage.setItem("token", response.data.token);
+                error.config.headers.Authorization = `Bearer ${response.data.token}`;
+                return axiosInstance.request(error.config);
+            }
+            // return Promise.reject(error.response.data.message);
+>>>>>>> Stashed changes
 
           if (response.status === 200) {
             localStorage.setItem("accessToken", response.data.accessToken);
