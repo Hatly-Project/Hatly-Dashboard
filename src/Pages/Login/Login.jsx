@@ -15,7 +15,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const mySchema = yup.object({
-    email: yup.string().email("Enter a valid email").required("Email is required"),
+    email: yup
+      .string()
+      .email("Enter a valid email")
+      .required("Email is required"),
     password: yup.string().required("Password is required"),
   });
 
@@ -27,17 +30,24 @@ const Login = () => {
   async function sendDataToLogin(values) {
     try {
       await axiosInstance.post("auth/login", values);
-      toast.success("Success! Welcome To Hatly", { position: "top-center", autoClose: 1000 });
+      toast.success("Success! Welcome To Hatly", {
+        position: "top-center",
+        autoClose: 1000,
+      });
 
       setTimeout(() => {
         navigate("/LandingPage");
       }, 1500);
+      console.log("scucesssssssss");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
-      toast.error(error.response?.data?.message || "Login failed. Please try again.", {
-        position: "top-center",
-        autoClose: 1000,
-      });
+      toast.error(
+        error.response?.data?.message || "Login failed. Please try again.",
+        {
+          position: "top-center",
+          autoClose: 1000,
+        }
+      );
     }
   }
 
@@ -53,8 +63,14 @@ const Login = () => {
       <div className="h-screen bg-[#F5ECE0] flex flex-col justify-center">
         <div className="container flex flex-col-reverse md:flex-row items-center h-screen p-4">
           <div className="w-full md:w-[40%] order-2 md:order-1 mt-4 md:mt-0">
-            <h1 className="text-center text-4xl text-mainColor font-bold">Welcome To Hatly</h1>
-            <img src={loginImage} alt="hatly login image" className="w-full mx-auto max-w-xs md:max-w-none" />
+            <h1 className="text-center text-4xl text-mainColor font-bold">
+              Welcome To Hatly
+            </h1>
+            <img
+              src={loginImage}
+              alt="hatly login image"
+              className="w-full mx-auto max-w-xs md:max-w-none"
+            />
           </div>
           <div className="w-full md:w-[60%] rounded-md shadow-sm p-4 order-1 md:order-2">
             <form onSubmit={myFormik.handleSubmit} className="max-w-md mx-auto">
@@ -78,7 +94,9 @@ const Login = () => {
                   onChange={myFormik.handleChange}
                   onBlur={myFormik.handleBlur}
                   value={myFormik.values.email}
-                  error={myFormik.touched.email && Boolean(myFormik.errors.email)}
+                  error={
+                    myFormik.touched.email && Boolean(myFormik.errors.email)
+                  }
                   helperText={myFormik.touched.email && myFormik.errors.email}
                 />
               </div>
@@ -101,12 +119,20 @@ const Login = () => {
                   onChange={myFormik.handleChange}
                   onBlur={myFormik.handleBlur}
                   value={myFormik.values.password}
-                  error={myFormik.touched.password && Boolean(myFormik.errors.password)}
-                  helperText={myFormik.touched.password && myFormik.errors.password}
+                  error={
+                    myFormik.touched.password &&
+                    Boolean(myFormik.errors.password)
+                  }
+                  helperText={
+                    myFormik.touched.password && myFormik.errors.password
+                  }
                 />
               </div>
 
-              <button type="submit" className="w-full bg-mainColor text-white p-2 rounded">
+              <button
+                type="submit"
+                className="w-full bg-mainColor text-white p-2 rounded"
+              >
                 Login
               </button>
             </form>
