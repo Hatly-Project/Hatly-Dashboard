@@ -3,6 +3,7 @@ import "./App.css";
 import Login from "./Pages/Login/Login";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import UserDetails from "./Pages/UserDetails/UserDetails";
 
 function App() {
 
@@ -11,7 +12,10 @@ function App() {
       path: "/",element:<Login/>
     },
     {
-      path: "/LandingPage",element:<LandingPage/>
+      path: "LandingPage",element:<LandingPage/>
+    },
+    {
+      path: "user/:id",element:<UserDetails/>
     }
   ])
   return <>
