@@ -3,9 +3,10 @@ import { useFormik } from "formik";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../Utils/axiosInstance";
+import axios from "axios";
 // import axios from "axios";
 const Login = () => {
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  // const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
   const mySchema = yup.object({
     email: yup
       .string()
@@ -14,10 +15,6 @@ const Login = () => {
     password: yup
       .string()
       .required(" Password is required")
-      .matches(
-        passwordRegex,
-        "Minimum eight characters, at least one letter and one number"
-      ),
   });
 
   const userData = {
@@ -25,10 +22,14 @@ const Login = () => {
     password: "",
   };
   async function sendDataToLogin(values) {
-    await axios.post(
-      "https://hatly-api.onrender.com/api/v2/auth/login",
-      values
-    );
+    console.log("values", values);
+    
+    try {
+      await axiosInstance.post("auth/login",values);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+
   }
 
   const myFormik = useFormik({
