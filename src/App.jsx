@@ -4,6 +4,8 @@ import Login from "./Pages/Login/Login";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import UserDetails from "./Pages/UserDetails/UserDetails";
+import { Provider } from "react-redux";
+import { store } from "./redux/Store";
 
 function App() {
 
@@ -19,9 +21,11 @@ function App() {
     }
   ])
   return <>
+  <Provider store={store}>
   <QueryClientProvider client={new QueryClient()}>
     <RouterProvider router={routes} />
   </QueryClientProvider>
+  </Provider>
   </>
 }
 
