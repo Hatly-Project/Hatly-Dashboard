@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/Slices/authSlice";
 import Loading from "../../Componente/Loading/Loading";
+import { CircularProgress } from "@mui/material";
 
 const Login = () => {
   const { loading, error } = useSelector((state) => state.auth);
@@ -139,7 +140,7 @@ const Login = () => {
                   type="submit"
                   className="w-full bg-mainColor text-white p-2 rounded"
                 >
-                  {loading ? <Loading /> : "Login"}
+                  {loading ? <CircularProgress size={25} /> : "Login"}
                 </button>
             </form>
           </div>
