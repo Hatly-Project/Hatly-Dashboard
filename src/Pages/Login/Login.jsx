@@ -29,9 +29,9 @@ const Login = () => {
       await axiosInstance.post("auth/login", values);
       toast.success("Success! Welcome To Hatly", { position: "top-center", autoClose: 1000 });
 
-      setTimeout(() => {
+      // setTimeout(() => {
         navigate("/LandingPage");
-      }, 1500);
+      // }, 1500);
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
       toast.error(error.response?.data?.message || "Login failed. Please try again.", {
