@@ -12,17 +12,14 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/Slices/authSlice";
 import Loading from "../../Componente/Loading/Loading";
-import { CircularProgress } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
+// import { CircularProgress } from "@mui/material";
+// import CircularProgress from "@mui/material/CircularProgress";
 
 const Login = () => {
   const { loading, error } = useSelector((state) => state.auth);
   console.log("error", error);
   console.log("loading", loading);
-  
-  
 
-const Login = () => {
   const navigate = useNavigate();
   const disptch = useDispatch();
   const mySchema = yup.object({
@@ -43,13 +40,13 @@ const Login = () => {
     if (error) {
       console.error("Login error:", error);
       toast.error(
-       <div className="text-center ">
+        <div className="text-center ">
           <p>{error}</p>
-       </div>,
-       {
-        position: "top-center",
-        autoClose: 1500,
-       }
+        </div>,
+        {
+          position: "top-center",
+          autoClose: 1500,
+        }
       );
     } else {
       toast.success("Success! Welcome To Hatly", {
@@ -140,11 +137,11 @@ const Login = () => {
               </div>
 
               <button
-                  type="submit"
-                  className="w-full bg-mainColor text-white p-2 rounded"
-                >
-                  {loading ? <Loading /> : "Login"}
-                </button>
+                type="submit"
+                className="w-full bg-mainColor text-white p-2 rounded"
+              >
+                {loading ? <Loading /> : "Login"}
+              </button>
             </form>
           </div>
         </div>
