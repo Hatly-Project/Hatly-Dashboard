@@ -1,35 +1,53 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../../Utils/axiosInstance";
-import axios from "axios";
-// import axios from "axios";
+import loginImage from "../../assets/Images/loginImage.png";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import EmailIcon from "@mui/icons-material/Email";
+import LockIcon from "@mui/icons-material/Lock";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
-  // const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const navigate = useNavigate();
   const mySchema = yup.object({
     email: yup
       .string()
       .email("Enter a valid email")
       .required("Email is required "),
-    password: yup
-      .string()
-      .required(" Password is required")
+    password: yup.string().required(" Password is required"),
   });
 
   const userData = {
     email: "",
     password: "",
   };
+
   async function sendDataToLogin(values) {
     console.log("values", values);
-    
-    try {
-      await axiosInstance.post("auth/login",values);
-    } catch (error) {
-      console.error("Login error:", error);
-    }
 
+    try {
+      await axiosInstance.post("auth/login", values);
+      toast.success("Success! Welcome To Hatly", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+      setTimeout(() => {
+        navigate("/LandingPage");
+      }, 1500);
+    } catch (error) {
+      console.error("Login error:", error.response?.data || error.message);
+      toast.error(
+        error.response?.data?.message || "Login failed. Please try again.",
+        {
+          position: "top-center",
+          autoClose: 1000,
+        }
+      );
+    }
   }
 
   const myFormik = useFormik({
@@ -40,61 +58,89 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-screen">
-        <form
-          onSubmit={myFormik.handleSubmit}
-          className="bg-white p-6 rounded shadow-md w-96"
-        >
-          <h2 className="text-2xl font-bold mb-4">Login</h2>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              onChange={myFormik.handleChange}
-              onBlur={myFormik.handleBlur}
-              value={myFormik.values.email}
+      <ToastContainer />
+
+      <div className="h-screen bg-[#F5ECE0] flex flex-col justify-center">
+     
+        <div className="container flex flex-col-reverse md:flex-row items-center h-screen  p-4">
+          <div className="w-full md:w-[40%] order-2 md:order-1 mt-4 md:mt-0">
+          <h1 className="text-center text-4xl text-mainColor font-bold ">Welcome To Hatly </h1>
+            <img
+              src={loginImage}
+              alt="hatly login image"
+              className="w-full mx-auto max-w-xs md:max-w-none"
             />
-            {myFormik.touched.email && myFormik.errors.email ? (
-              <div className="text-red-500 text-sm mt-1">
-                {myFormik.errors.email}
-              </div>
-            ) : null}
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium mb-1"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className="w-full border border-gray-300 rounded px-3 py-2"
-              onChange={myFormik.handleChange}
-              onBlur={myFormik.handleBlur}
-              value={myFormik.values.password}
-            />
-            {myFormik.touched.password && myFormik.errors.password ? (
-              <div className="text-red-500 text-sm mt-1">
-                {myFormik.errors.password}
+
+          <div className="w-full md:w-[60%] rounded-md shadow-sm p-4 order-1 md:order-2">
+            <form onSubmit={myFormik.handleSubmit} className="max-w-md mx-auto">
+              <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+
+              <div className="mb-4">
+                <TextField
+                  placeholder=" Email"
+                  type="email"
+                  id="email"
+                  name="email"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={myFormik.handleChange}
+                  onBlur={myFormik.handleBlur}
+                  value={myFormik.values.email}
+                  error={
+                    myFormik.touched.email && Boolean(myFormik.errors.email)
+                  }
+                  helperText={myFormik.touched.email && myFormik.errors.email}
+                />
               </div>
-            ) : null}
+
+              <div className="mb-4">
+                <TextField
+                  placeholder=" Password"
+                  type="password"
+                  id="password"
+                  name="password"
+                  fullWidth
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={myFormik.handleChange}
+                  onBlur={myFormik.handleBlur}
+                  value={myFormik.values.password}
+                  error={
+                    myFormik.touched.password &&
+                    Boolean(myFormik.errors.password)
+                  }
+                  helperText={
+                    myFormik.touched.password && myFormik.errors.password
+                  }
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-mainColor text-white p-2 rounded"
+              >
+                Login
+              </button>
+            </form>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-          >
-            Login
-          </button>
-        </form>
+        </div>
+
       </div>
+      
     </>
   );
 };
