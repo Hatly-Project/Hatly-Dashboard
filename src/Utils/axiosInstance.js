@@ -36,7 +36,7 @@ axiosInstance.interceptors.request.use(
         return Promise.reject(error);
 >>>>>>> Stashed changes
     }
-    if (token) {
+    if (token) { 
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
