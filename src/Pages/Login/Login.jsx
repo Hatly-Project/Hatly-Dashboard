@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import axiosInstance from "../../Utils/axiosInstance";
 import loginImage from "../../assets/Images/loginImage.png";
 import TextField from "@mui/material/TextField";
@@ -10,8 +10,10 @@ import LockIcon from "@mui/icons-material/Lock";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const mySchema = yup.object({
@@ -28,19 +30,22 @@ const Login = () => {
   };
 
   async function sendDataToLogin(values) {
+    setIsLoading(true);
     try {
       await axiosInstance.post("auth/login", values);
+      
       toast.success("Success! Welcome To Hatly", {
         position: "top-center",
         autoClose: 1000,
       });
 
-      setTimeout(() => {
+      
         navigate("/LandingPage");
-      }, 1500);
+     ;
       console.log("scucesssssssss");
     } catch (error) {
       console.error("Login error:", error.response?.data || error.message);
+     
       toast.error(
         error.response?.data?.message || "Login failed. Please try again.",
         {
@@ -48,6 +53,8 @@ const Login = () => {
           autoClose: 1000,
         }
       );
+    }finally{
+      setIsLoading(false);
     }
   }
 
@@ -133,7 +140,11 @@ const Login = () => {
                 type="submit"
                 className="w-full bg-mainColor text-white p-2 rounded"
               >
-                Login
+                {isLoading ? (
+                    <CircularProgress  size="25px" sx={{color:"white"}}/>
+                ) : (
+                  "Login"
+                )}
               </button>
             </form>
           </div>
