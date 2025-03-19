@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import React from "react";
-import axiosInstance from "../../Utils/axiosInstance";
 import loginImage from "../../assets/Images/loginImage.png";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -10,10 +9,18 @@ import LockIcon from "@mui/icons-material/Lock";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../redux/Slices/authSlice";
+import Loading from "../../Componente/Loading/Loading";
 
 const Login = () => {
+  const { loading, error } = useSelector((state) => state.auth);
+  console.log("error", error);
+  console.log("loading", loading);
+  
+  
   const navigate = useNavigate();
-
+  const disptch = useDispatch();
   const mySchema = yup.object({
     email: yup
       .string()
@@ -28,26 +35,25 @@ const Login = () => {
   };
 
   async function sendDataToLogin(values) {
-    try {
-      await axiosInstance.post("auth/login", values);
+    disptch(login(values));
+    if (error) {
+      console.error("Login error:", error);
+      toast.error(
+       <div className="text-center ">
+          <p>{error}</p>
+       </div>,
+       {
+        position: "top-center",
+        autoClose: 1500,
+       }
+      );
+    } else {
+     
+      navigate("LandingPage");
       toast.success("Success! Welcome To Hatly", {
         position: "top-center",
         autoClose: 1000,
       });
-
-      // setTimeout(() => {
-        navigate("/LandingPage"); 
-      // }, 1500);
-      console.log("scucesssssssss");
-    } catch (error) {
-      console.error("Login error:", error.response?.data || error.message);
-      toast.error(
-        error.response?.data?.message || "Login failed. Please try again.",
-        {
-          position: "top-center",
-          autoClose: 1000,
-        }
-      );
     }
   }
 
@@ -130,11 +136,11 @@ const Login = () => {
               </div>
 
               <button
-                type="submit"
-                className="w-full bg-mainColor text-white p-2 rounded"
-              >
-                Login
-              </button>
+                  type="submit"
+                  className="w-full bg-mainColor text-white p-2 rounded"
+                >
+                  {loading ? <Loading /> : "Login"}
+                </button>
             </form>
           </div>
         </div>
