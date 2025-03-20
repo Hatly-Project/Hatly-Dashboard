@@ -12,8 +12,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { changeLoginSuccess, login } from "../../redux/Slices/authSlice";
 import Loading from "../../Componente/Loading/Loading";
-// import { CircularProgress } from "@mui/material";
-// import CircularProgress from '@mui/material/CircularProgress';
 
 const Login = () => {
   const { loading, error, loginSuccess } = useSelector((state) => state.auth);
@@ -57,10 +55,7 @@ useEffect(()=>{
   
 }, [error])
   function sendDataToLogin(values) {
-
     disptch(login(values));
-
-   
   }
 
   const myFormik = useFormik({
