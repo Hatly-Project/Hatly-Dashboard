@@ -3,12 +3,13 @@ import axiosInstance from "../../Utils/axiosInstance";
 
 const login = createAsyncThunk(
     "auth/login",
-    async (data) => {
-        const response = await axiosInstance.post("/auth/login", data);
- 
-        console.log("response", response.data);
-        
-        return response.data;
+    async (data , {rejectWithValue}) => {
+        try {
+            const response = await axiosInstance.post("/auth/login", data);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response.data.message);
+        }
     }
 )
 const authSlice = createSlice({
@@ -17,8 +18,13 @@ const authSlice = createSlice({
         user:null,
         loading:false,
         error:null,
+        loginSuccess:false
     },
-    reducers:{},
+    reducers:{
+        changeLoginSuccess:(state)=>{
+            state.loginSuccess=false
+        }
+    },
     extraReducers:(builder)=>{
         builder
         .addCase(login.pending,(state)=>{
@@ -27,14 +33,17 @@ const authSlice = createSlice({
         })
         .addCase(login.fulfilled,(state,action)=>{
             state.loading=false;
+            state.error=null;
             state.user=action.payload;
+            state.loginSuccess=true;
         })
         .addCase(login.rejected,(state,action)=>{
             state.loading=false;
-            state.error=action.error.message;
+            state.error=action.payload;
         })
     }
 })
 
 export { login };
+export const { changeLoginSuccess } = authSlice.actions;
 export default authSlice.reducer

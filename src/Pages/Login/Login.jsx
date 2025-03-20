@@ -1,6 +1,6 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import loginImage from "../../assets/Images/loginImage.png";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -10,13 +10,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/Slices/authSlice";
+import { changeLoginSuccess, login } from "../../redux/Slices/authSlice";
 import Loading from "../../Componente/Loading/Loading";
-// import { CircularProgress } from "@mui/material";
-// import CircularProgress from "@mui/material/CircularProgress";
 
 const Login = () => {
-  const { loading, error } = useSelector((state) => state.auth);
+  const { loading, error, loginSuccess } = useSelector((state) => state.auth);
   console.log("error", error);
   console.log("loading", loading);
 
@@ -34,28 +32,30 @@ const Login = () => {
     email: "",
     password: "",
   };
-
-  async function sendDataToLogin(values) {
+useEffect(()=>{
+  if(loginSuccess){
+    navigate("/landingPage");
+    disptch(changeLoginSuccess());
+  }
+},[loginSuccess])
+useEffect(()=>{
+  if (error) {
+    console.error("Login error:", error);
+    toast.error(
+     <div className="text-center ">
+        <p>{error}</p>
+     </div>,
+     {
+      position: "top-center",
+      hideProgressBar: false,
+      closeOnClick: true,
+     }
+    );
+  }
+  
+}, [error])
+  function sendDataToLogin(values) {
     disptch(login(values));
-    if (error) {
-      console.error("Login error:", error);
-      toast.error(
-        <div className="text-center ">
-          <p>{error}</p>
-        </div>,
-        {
-          position: "top-center",
-          autoClose: 1500,
-        }
-      );
-    } else {
-      toast.success("Success! Welcome To Hatly", {
-        position: "top-center",
-        autoClose: 1000,
-      });
-      navigate("/LandingPage");
-      console.log("scucesssssssss");
-    }
   }
 
   const myFormik = useFormik({
