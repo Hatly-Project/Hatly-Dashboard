@@ -6,6 +6,7 @@ const login = createAsyncThunk(
     async (data , {rejectWithValue}) => {
         try {
             const response = await axiosInstance.post("/auth/login", data);
+            
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response.data.message);
@@ -34,7 +35,8 @@ const authSlice = createSlice({
         .addCase(login.fulfilled,(state,action)=>{
             state.loading=false;
             state.error=null;
-            state.user=action.payload;
+            
+            state.user=action.payload.user;
             state.loginSuccess=true;
         })
         .addCase(login.rejected,(state,action)=>{

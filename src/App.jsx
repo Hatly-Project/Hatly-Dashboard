@@ -11,6 +11,7 @@ import Users from "./Pages/Users/users";
 import Trips from "./Pages/Trips/Trips";
 import Shipments from "./Pages/Shipments/Shipments";
 import Deals from "./Pages/Deals/Deals";
+import { BreadCrumbProvider } from "./context/BreadCrumbContext";
 function App() {
   const routes = createBrowserRouter([
     { path: "/", element: <Login /> },
@@ -19,10 +20,10 @@ function App() {
       element: <LandingPage />,
       children: [
         { path: "home", element: <Home /> },
-        {path: "users", element: <Users/>},
-        {path:"trips", element: <Trips/>} ,
-        {path:"shipments", element: <Shipments/>} ,
-        {path:"deals", element: <Deals/>} ,
+        { path: "users", element: <Users /> },
+        { path: "trips", element: <Trips /> },
+        { path: "shipments", element: <Shipments /> },
+        { path: "deals", element: <Deals /> },
         { path: "userDetails/:id", element: <UserDetails /> },
       ],
     },
@@ -31,7 +32,9 @@ function App() {
     <>
       <Provider store={store}>
         <QueryClientProvider client={new QueryClient()}>
-          <RouterProvider router={routes} />
+          <BreadCrumbProvider>
+            <RouterProvider router={routes} />
+          </BreadCrumbProvider>
         </QueryClientProvider>
       </Provider>
     </>

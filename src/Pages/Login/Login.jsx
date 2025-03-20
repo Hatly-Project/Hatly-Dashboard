@@ -15,9 +15,6 @@ import Loading from "../../Componente/Loading/Loading";
 
 const Login = () => {
   const { loading, error, loginSuccess } = useSelector((state) => state.auth);
-  console.log("error", error);
-  console.log("loading", loading);
-
   const navigate = useNavigate();
   const disptch = useDispatch();
   const mySchema = yup.object({
