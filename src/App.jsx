@@ -6,27 +6,36 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import UserDetails from "./Pages/UserDetails/UserDetails";
 import { Provider } from "react-redux";
 import { store } from "./redux/Store";
-
+import Home from "./Pages/Home/Home";
+import Users from "./Pages/Users/users";
+import Trips from "./Pages/Trips/Trips";
+import Shipments from "./Pages/Shipments/Shipments";
+import Deals from "./Pages/Deals/Deals";
 function App() {
-
   const routes = createBrowserRouter([
+    { path: "/", element: <Login /> },
     {
-      path: "/",element:<Login/>
+      path: "/landingPage",
+      element: <LandingPage />,
+      children: [
+        { path: "home", element: <Home /> },
+        {path: "users", element: <Users/>},
+        {path:"trips", element: <Trips/>} ,
+        {path:"shipments", element: <Shipments/>} ,
+        {path:"deals", element: <Deals/>} ,
+        { path: "userDetails/:id", element: <UserDetails /> },
+      ],
     },
-    {
-      path: "LandingPage",element:<LandingPage/>
-    },
-    {
-      path: "user/:id",element:<UserDetails/>
-    }
-  ])
-  return <>
-  <Provider store={store}>
-  <QueryClientProvider client={new QueryClient()}>
-    <RouterProvider router={routes} />
-  </QueryClientProvider>
-  </Provider>
-  </>
+  ]);
+  return (
+    <>
+      <Provider store={store}>
+        <QueryClientProvider client={new QueryClient()}>
+          <RouterProvider router={routes} />
+        </QueryClientProvider>
+      </Provider>
+    </>
+  );
 }
 
 export default App;

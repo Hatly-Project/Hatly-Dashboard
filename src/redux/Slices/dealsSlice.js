@@ -1,7 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../Utils/axiosInstance';
 const fetchDeals = createAsyncThunk('deals/fetchDeals', async () => {
-    const response = await axiosInstance.get('/deals');
+    const response = await axiosInstance.get('/deals',
+        {
+            headers:{
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        }
+    );
     return response.data;
 });
 const dealsSlice = createSlice({

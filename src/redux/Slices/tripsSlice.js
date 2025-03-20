@@ -4,7 +4,13 @@ import axiosInstance from "../../Utils/axiosInstance";
 const fetchTrips = createAsyncThunk(
     "trips/fetchTrips",
     async () => {
-        const response = await axiosInstance.get("/trip");
+        const response = await axiosInstance.get("/trip",
+            {
+                headers:{
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }
+        );
         return response.data;
     }
 )

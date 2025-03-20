@@ -34,7 +34,7 @@ const Login = () => {
   };
 useEffect(()=>{
   if(loginSuccess){
-    navigate("/landingPage");
+    navigate("/landingPage/home");
     disptch(changeLoginSuccess());
   }
 },[loginSuccess])

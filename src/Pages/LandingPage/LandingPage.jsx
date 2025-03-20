@@ -8,6 +8,7 @@ import SideMenu from '../../Componente/SideMenu/SideMenu';
 import Navbar from '../../Componente/NavBar/NavBar';
 import Header from '../../Componente/Header/Header';
 import MainGrid from '../../Componente/MainGrid/MainGrid';
+import { Outlet } from 'react-router-dom';
  
 
 export default function LandingPage(props) {
@@ -16,24 +17,7 @@ export default function LandingPage(props) {
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
-        <Navbar />
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, overflow: 'auto' }}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 0 },
-            }}
-          >
-            <Header />
-            <MainGrid />
-          </Stack>
-        </Box>
+      <Outlet></Outlet>
       </Box>
       </>
   );

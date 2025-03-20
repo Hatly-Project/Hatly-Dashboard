@@ -4,7 +4,13 @@ import axiosInstance from "../../Utils/axiosInstance";
 const fetchShipments = createAsyncThunk(
     "shipment/fetchShipments",
     async () => {
-        const response = await axiosInstance.get("/shipment");
+        const response = await axiosInstance.get("/shipment",
+            {
+                headers:{
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }
+        );
         return response.data;
     }
 )
