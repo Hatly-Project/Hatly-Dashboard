@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../Utils/axiosInstance';
 const fetchDeals = createAsyncThunk('deals/fetchDeals', async () => {
     const response = await axiosInstance.get('/deal',
-        {
-            headers:{
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        }
+        // {
+        //     headers:{
+        //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        //     }
+        // }
     );
     return response.data;
 });
@@ -30,7 +30,7 @@ const dealsSlice = createSlice({
         })
         .addCase(fetchDeals.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.error.message;
+            state.error = action.payload;
         });
     }
 })

@@ -5,11 +5,11 @@ const fetchUsers = createAsyncThunk(
     "users/fetchUsers",
     async () => {
         const response = await axiosInstance.get("/user",
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                }
-            }
+            // {
+            //     headers: {
+            //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            //     }
+            // }
         );
         return response.data;
     }

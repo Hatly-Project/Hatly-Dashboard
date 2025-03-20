@@ -15,7 +15,7 @@ axiosInstance.interceptors.request.use(
       config.data = {
         ...config.data,
         refreshToken: refreshToken,
-      }
+      };
     }
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -37,7 +37,7 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     console.error("Axios error:", error);
-    if (error.config.url === "/auth/refresh" ) {
+    if (error.config.url === "/auth/refresh") {
       return Promise.reject(error);
     }
     if (error.response?.status === 401 && error.config.url !== "/auth/login") {
@@ -61,7 +61,10 @@ axiosInstance.interceptors.response.use(
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           // Instead of navigating here, return an error so the component handles it
-          return Promise.reject({ message: "Session expired", shouldRedirect: true });
+          return Promise.reject({
+            message: "Session expired",
+            shouldRedirect: true,
+          });
         }
       }
     }

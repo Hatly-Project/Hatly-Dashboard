@@ -5,11 +5,11 @@ const fetchTrips = createAsyncThunk(
     "trips/fetchTrips",
     async () => {
         const response = await axiosInstance.get("/trip",
-            {
-                headers:{
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                }
-            }
+            // {
+            //     headers:{
+            //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            //     }
+            // }
         );
         return response.data;
     }
@@ -34,7 +34,7 @@ const tripsSlice= createSlice({
         })
         .addCase(fetchTrips.rejected,(state,action)=>{
             state.loading=false;
-            state.error=action.error.message;
+            state.error=action.payload;
         })
     }
 

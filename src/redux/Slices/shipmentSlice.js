@@ -5,11 +5,11 @@ const fetchShipments = createAsyncThunk(
     "shipment/fetchShipments",
     async () => {
         const response = await axiosInstance.get("/shipment",
-            {
-                headers:{
-                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`
-                }
-            }
+            // {
+            //     headers:{
+            //         Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+            //     }
+            // }
         );
         return response.data;
     }
@@ -34,7 +34,7 @@ const shipmentSlice = createSlice({
             })
             .addCase(fetchShipments.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message;
+                state.error = action.payload;
             });
     },
 });

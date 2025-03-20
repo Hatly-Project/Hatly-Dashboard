@@ -15,11 +15,12 @@ import { fetchShipments } from "../../redux/Slices/shipmentSlice";
 export default function LandingPage() {
   const dispatch = useDispatch();
   React.useEffect(() => {
+    console.log("fetching data");
     dispatch(fetchUsers());
     dispatch(fetchDeals());
     dispatch(fetchTrips());
     dispatch(fetchShipments());
-  },[])
+  }, []);
   return (
     <>
       <CssBaseline enableColorScheme />
