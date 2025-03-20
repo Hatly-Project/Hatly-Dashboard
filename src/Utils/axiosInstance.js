@@ -37,10 +37,10 @@ axiosInstance.interceptors.response.use(
   },
   async (error) => {
     console.error("Axios error:", error);
-    if (error.config.url === "/auth/refresh") {
+    if (error.config.url === "/auth/refresh" ) {
       return Promise.reject(error);
     }
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && error.config.url !== "/auth/login") {
       const refreshToken = localStorage.getItem("refreshToken");
 
       if (refreshToken) {
