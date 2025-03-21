@@ -12,6 +12,7 @@ import Trips from "./Pages/Trips/Trips";
 import Shipments from "./Pages/Shipments/Shipments";
 import Deals from "./Pages/Deals/Deals";
 import { BreadCrumbProvider } from "./context/BreadCrumbContext";
+import { CountriesProvider } from "./context/CountriesProvider";
 function App() {
   const routes = createBrowserRouter([
     { path: "/", element: <Login /> },
@@ -33,7 +34,9 @@ function App() {
       <Provider store={store}>
         <QueryClientProvider client={new QueryClient()}>
           <BreadCrumbProvider>
-            <RouterProvider router={routes} />
+            <CountriesProvider>
+              <RouterProvider router={routes} />
+            </CountriesProvider>
           </BreadCrumbProvider>
         </QueryClientProvider>
       </Provider>
