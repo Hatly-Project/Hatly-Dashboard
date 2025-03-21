@@ -14,23 +14,23 @@ const dealsSlice = createSlice({
     name: 'deals',
     initialState: {
         deals: [],
-        loading: false,
-        error: null
+        dealsLoading: false,
+        DealsError: null
     },
     reducers : {},
     extraReducers: (builder) => {    
         builder
         .addCase(fetchDeals.pending, (state) => {
-            state.loading = true;
-            state.error = null;
+            state.dealsLoading = true;
+            state.DealsError = null;
         })
         .addCase(fetchDeals.fulfilled, (state, action) => {
-            state.loading = false;
+            state.dealsLoading = false;
             state.deals = action.payload;
         })
         .addCase(fetchDeals.rejected, (state, action) => {
-            state.loading = false;
-            state.error = action.payload;
+            state.dealsLoading = false;
+            state.DealsError = action.payload;
         });
     }
 })

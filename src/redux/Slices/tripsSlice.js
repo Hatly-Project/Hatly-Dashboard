@@ -18,23 +18,23 @@ const tripsSlice= createSlice({
     name:"trips",
     initialState:{
         trips:[],
-        loading:false,
-        error:null
+        TripsLoading:false,
+        tripsError:null
     },
     reducers:{},
     extraReducers:(builder)=>{
         builder
         .addCase(fetchTrips.pending,(state)=>{
-            state.loading=true;
-            state.error=null;
+            state.TripsLoading=true;
+            state.tripsError=null;
         })
         .addCase(fetchTrips.fulfilled,(state,action)=>{
-            state.loading=false;
+            state.TripsLoading=false;
             state.trips=action.payload;
         })
         .addCase(fetchTrips.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload;
+            state.TripsLoading=false;
+            state.tripsError=action.payload;
         })
     }
 

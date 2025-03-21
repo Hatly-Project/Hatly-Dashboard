@@ -39,7 +39,7 @@ function getDaysInMonth(month, year) {
   return days;
 }
 
-export default function SessionsChart({deals}) {
+export default function SessionsChart({deals  , loading}) {
   const theme = useTheme();
   const data = getDaysInMonth(4, 2024);
 
@@ -65,7 +65,7 @@ export default function SessionsChart({deals}) {
             }}
           >
             <Typography variant="h4" component="p">
-              {deals?.length}
+              {loading ? 'Loading...' : deals}
             </Typography>
             <Chip size="small" color="success" label="0%" />
           </Stack>

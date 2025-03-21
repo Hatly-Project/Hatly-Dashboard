@@ -162,7 +162,7 @@ export default function UserDetails() {
   ));
 
   return (
-    <div className="p-4">
+    <div className="w-full">
       <ToastContainer
         position="top-right"
         autoClose={5000}

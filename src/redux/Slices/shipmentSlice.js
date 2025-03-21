@@ -18,23 +18,23 @@ const shipmentSlice = createSlice({
     name: "shipment",
     initialState: {
         shipments: [],
-        loading: false,
-        error: null,
+        shipmentsLoading: false,
+        shipmentsError: null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchShipments.pending, (state) => {
-                state.loading = true;
-                state.error = null;
+                state.shipmentsLoading = true;
+                state.shipmentsError = null;
             })
             .addCase(fetchShipments.fulfilled, (state, action) => {
-                state.loading = false;
+                state.shipmentsLoading = false;
                 state.shipments = action.payload;
             })
             .addCase(fetchShipments.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
+                state.shipmentsLoading = false;
+                state.shipmentsError = action.payload;
             });
     },
 });

@@ -8,15 +8,19 @@ import StatCard from './StatCard';
 import { useSelector } from 'react-redux';
 
 export default function MainGrid() {
-  const users= useSelector((state) => state.users.users);
-  const {trips} =useSelector((state) => state.trips.trips);
-  const {shipments} =useSelector((state) => state.shipments.shipments);
-  const {deals} =useSelector((state) => state.deals.deals);
+  const {users , UsersLoading}= useSelector((state) => state.users);
+  const {trips , TripsLoading} =useSelector((state) => state.trips);
+  const {shipments , shipmentsLoading} =useSelector((state) => state.shipments);
+  const {deals , dealsLoading} =useSelector((state) => state.deals);
+  console.log('users',users)
+  console.log('trips',trips)
+  console.log('shipments',shipments)
+  console.log('deals',deals);
   
 const data = [
   {
     title: 'Users',
-    value:`${users?.length}`,
+    value:`${UsersLoading ?  'Loading...' : users?.length}`,
     // interval: 'Last 30 days',
     trend: 'up',
     data: [
@@ -26,7 +30,7 @@ const data = [
   },
   {
     title: 'Trips',
-    value: `${trips?.length}`,
+    value: `${TripsLoading ? 'Loading...' : trips?.totalData}`,
     // interval: 'Last 30 days',
     trend: 'down',
     data: [
@@ -36,7 +40,7 @@ const data = [
   },
   {
     title: 'Shipments',
-    value: `${shipments?.length}`,
+    value: `${shipmentsLoading ? 'Loading...' : shipments?.totalData}`,
     // interval: 'Last 30 days',
     trend: 'neutral',
     data: [
@@ -46,7 +50,7 @@ const data = [
   },
   {
     title: 'Deals',
-    value: `${deals?.length}`,
+    value: `${dealsLoading ? 'Loading...' : deals?.totalData}`,
     // interval: 'Last 30 days',
     trend: 'down',
     data: [
@@ -75,7 +79,7 @@ const data = [
         ))}
         
         <Grid size={{ xs: 12, md: 12 }}>
-          <SessionsChart deals={deals} />
+          <SessionsChart deals={deals?.totalData} loading={dealsLoading} />
         </Grid>
         {/* <Grid size={{ xs: 12, md: 6 }}>
           <PageViewsBarChart />

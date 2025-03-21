@@ -31,7 +31,7 @@ const Login = () => {
   };
 useEffect(()=>{
   if(loginSuccess){
-    navigate("/landingPage/home");
+    navigate("/landingPage/userDetails/01JPNNHVGQZ8KGX391BRZJB98Y");
     disptch(changeLoginSuccess());
   }
 },[loginSuccess])
