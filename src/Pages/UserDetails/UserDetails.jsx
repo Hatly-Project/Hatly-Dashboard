@@ -121,9 +121,9 @@ export default function UserDetails() {
         : "";
       setPhone(formattedPhone);
       if (user.profilePhoto)
-        setProfilePhoto(`data:image/png;base64,${user.profilePhoto}`);
+        setProfilePhoto(`${user.profilePhoto}`);
       if (user.passportPhoto)
-        setPassportPhoto(`data:image/png;base64,${user.passportPhoto}`);
+        setPassportPhoto(`${user.passportPhoto}`);
     } else {
       getUserDetails();
     }
@@ -178,7 +178,7 @@ export default function UserDetails() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
         <div className="md:col-span-3 p-3">
           <img
-            src={profilePhoto}
+            src={userObject.profilePhoto!==null?userObject.profilePhoto:loginImage}
             alt="User Avatar"
             className="w-full mb-3 rounded-md border-2"
           />
