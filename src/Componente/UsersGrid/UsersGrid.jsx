@@ -38,55 +38,63 @@ export default function UsersGrid() {
   const displayedUsers = users.slice(startIndex, startIndex + rowsPerPage);
 
   return (
-    <div className=" w-full">
+    <div className="w-full">
       <div className="overflow-x-auto">
-        <table className="min-w-full border border-300 bg-white">
-          <thead className="bg-100">
+        <table className="min-w-full border border-gray-300 bg-white">
+          <thead className="bg-gray-100">
             <tr>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">ID</th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">Info</th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
+                ID
+              </th>
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
+                Info
+              </th>
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
                 <div className="flex items-center gap-1">
-                  <PhoneOutlinedIcon sx={{ width: '20px', height: '20px' }} />
+                  <PhoneOutlinedIcon sx={{ width: '16px', height: '16px' }} />
                   <span>Phone</span>
                 </div>
               </th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
                 <div className="flex items-center gap-1">
-                  <FlagOutlinedIcon sx={{ width: '20px', height: '20px' }} />
+                  <FlagOutlinedIcon sx={{ width: '16px', height: '16px' }} />
                   <span>Country</span>
                 </div>
               </th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
                 <div className="flex items-center gap-1">
-                  <HomeOutlinedIcon sx={{ width: '20px', height: '20px' }} />
+                  <HomeOutlinedIcon sx={{ width: '16px', height: '16px' }} />
                   <span>Address</span>
                 </div>
               </th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
                 <div className="flex items-center gap-1">
-                  <DateRangeOutlinedIcon sx={{ width: '20px', height: '20px' }} />
+                  <DateRangeOutlinedIcon sx={{ width: '16px', height: '16px' }} />
                   <span>DoB</span>
                 </div>
               </th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">Role</th>
-              <th className="px-4 py-2 border-b text-left text-sm font-medium text-700">Verified</th>
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
+                Role
+              </th>
+              <th className="px-4 py-2 border-b text-left text-xs md:text-sm font-medium text-gray-700">
+                Verified
+              </th>
             </tr>
           </thead>
           <tbody>
             {displayedUsers.map((user) => (
-              <tr key={user.id} className="hover:bg-50">
-                <td className="px-4 py-2 border-b text-sm text-600">{user.id}</td>
-                <td className="px-4 py-2 border-b text-sm text-600">
+              <tr key={user.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">{user.id}</td>
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     {user.profilePhoto == null ? (
-                      <AccountCircleOutlinedIcon sx={{ width: '30px', height: '30px' }} />
+                      <AccountCircleOutlinedIcon sx={{ width: '24px', height: '24px' }} />
                     ) : (
                       <img src={user?.profilePhoto} className="w-6 h-6 rounded-full" />
                     )}
                     <div>
-                      <div>{user.firstName}</div>
-                      <div>{user.email}</div>
+                      <div className="text-xs md:text-sm">{user.firstName}</div>
+                      <div className="text-xs md:text-sm">{user.email}</div>
                       <Stack spacing={1}>
                         <Rating
                           name="half-rating-read"
@@ -98,10 +106,10 @@ export default function UsersGrid() {
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-2 border-b text-sm text-600">
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
                   0{user.phone?.phoneNumber || 'N/A'}
                 </td>
-                <td className="px-4 py-2 border-b text-sm text-600">
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     {user.country && (
                       <img
@@ -113,10 +121,16 @@ export default function UsersGrid() {
                     <span>{user.country || 'N/A'}</span>
                   </div>
                 </td>
-                <td className="px-4 py-2 border-b text-sm text-600">{user.city || 'N/A'}</td>
-                <td className="px-4 py-2 border-b text-sm text-600">{user.dateOfBirth || 'N/A'}</td>
-                <td className="px-4 py-2 border-b text-sm text-600">{user.role || 'N/A'}</td>
-                <td className="px-4 py-2 border-b text-sm text-600">
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
+                  {user.city || 'N/A'}
+                </td>
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
+                  {user.dateOfBirth || 'N/A'}
+                </td>
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
+                  {user.role || 'N/A'}
+                </td>
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
                   {user.verify ? (
                     <TaskAltIcon className="text-green-500" />
                   ) : (
@@ -128,16 +142,16 @@ export default function UsersGrid() {
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-2">
         <div>
-          <label htmlFor="rowsPerPage" className="mx-2 text-sm font-medium text-gray-700">
+          <label htmlFor="rowsPerPage" className="mr-2 text-xs md:text-sm font-medium text-gray-700">
             Rows per page:
           </label>
           <select
             id="rowsPerPage"
             value={rowsPerPage}
             onChange={handleRowsPerPageChange}
-            className="border border-gray-300 rounded px-2 py-1 text-sm"
+            className="border border-gray-300 rounded px-2 py-1 text-xs md:text-sm"
           >
             <option value={5}>5</option>
             <option value={7}>7</option>
@@ -148,17 +162,17 @@ export default function UsersGrid() {
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
-            className="px-4 py-2 text-gray-700 rounded disabled:opacity-50"
+            className="px-4 py-2 text-gray-700 rounded disabled:opacity-50 text-xs md:text-sm"
           >
             <ArrowBackIosNewOutlinedIcon />
           </button>
-          <span className="text-sm text-gray-700">
+          <span className="text-xs md:text-sm text-gray-700">
             Page {currentPage} of {Math.ceil(users.length / rowsPerPage)}
           </span>
           <button
             onClick={handleNextPage}
             disabled={currentPage === Math.ceil(users.length / rowsPerPage)}
-            className="px-4 py-2 text-gray-700 rounded disabled:opacity-50"
+            className="px-4 py-2 text-gray-700 rounded disabled:opacity-50 text-xs md:text-sm"
           >
             <ArrowForwardIosOutlinedIcon />
           </button>
