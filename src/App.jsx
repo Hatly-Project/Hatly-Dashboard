@@ -13,21 +13,25 @@ import Shipments from "./Pages/Shipments/Shipments";
 import Deals from "./Pages/Deals/Deals";
 import { BreadCrumbProvider } from "./context/BreadCrumbContext";
 import { CountriesProvider } from "./context/CountriesProvider";
+import Layout from "./Pages/Layout/Layout";
 function App() {
   const routes = createBrowserRouter([
-    { path: "/", element: <Login /> },
-    {
-      path: "/landingPage",
-      element: <LandingPage />,
-      children: [
-        { path: "home", element: <Home /> },
-        { path: "users", element: <Users /> },
-        { path: "trips", element: <Trips /> },
-        { path: "shipments", element: <Shipments /> },
-        { path: "deals", element: <Deals /> },
-        { path: "userDetails/:id", element: <UserDetails /> },
-      ],
-    },
+    {path: "/", element: <Layout/>, children: [
+      {path: "/", element: <Login/> , index: true},
+      {
+        path: "landingPage",
+        element: <LandingPage />,
+        children: [
+          { path: "home", element: <Home /> },
+          { path: "users", element: <Users /> },
+          { path: "trips", element: <Trips /> },
+          { path: "shipments", element: <Shipments /> },
+          { path: "deals", element: <Deals /> },
+          { path: "users/:id", element: <UserDetails /> },
+        ],
+      },
+    ]},
+   
   ]);
   return (
     <>

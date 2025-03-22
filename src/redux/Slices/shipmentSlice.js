@@ -34,7 +34,7 @@ const shipmentSlice = createSlice({
             })
             .addCase(fetchShipments.rejected, (state, action) => {
                 state.shipmentsLoading = false;
-                state.shipmentsError = action.payload;
+                state.shipmentsError = action.error.message;
             });
     },
 });

@@ -30,7 +30,7 @@ const dealsSlice = createSlice({
         })
         .addCase(fetchDeals.rejected, (state, action) => {
             state.dealsLoading = false;
-            state.DealsError = action.payload;
+            state.DealsError = action.error.message;
         });
     }
 })

@@ -9,6 +9,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import { areaElementClasses } from "@mui/x-charts/LineChart";
+import { CircularProgress } from "@mui/material";
 
 function getDaysInMonth(month, year) {
   const date = new Date(year, month, 0);
@@ -41,7 +42,7 @@ AreaGradient.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-function StatCard({ title, value, trend, data }) {
+function StatCard({ title, value, trend, data , isloading }) {
 
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
@@ -93,7 +94,7 @@ function StatCard({ title, value, trend, data }) {
                 dealsLoading
                   ? "Loading..."
                   : value} */}
-                {value}
+                {isloading ? <CircularProgress/> : value}
               </Typography>
               <Chip size="small" color={color} label={trendValues[trend]} />
             </Stack>

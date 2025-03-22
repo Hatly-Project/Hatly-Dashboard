@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { CloudUpload } from "@mui/icons-material";
 import loginImage from "../../assets/Images/loginImage.png";
 import axiosInstance from "../../Utils/axiosInstance";
@@ -11,6 +11,7 @@ import {
   FormControl,
   FormLabel,
   CircularProgress,
+  Skeleton,
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,11 +20,70 @@ import "react-phone-number-input/style.css";
 import { isValidPhoneNumber } from "react-phone-number-input";
 import { useParams } from "react-router-dom";
 import Loading from "../../Componente/Loading/Loading";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getUserDetails,
+  updateUserDetails,
+} from "../../redux/Slices/UserDetailsSlice";
+import PhoneInputComponent from "../../Componente/PhoneInputComponent/PhoneInputComponent";
 export default function UserDetails() {
   const { id } = useParams();
   const { countries, loading: countriesLoading } = useCountries();
-  const [userObject, setUserObject] = useState(null);
+  const state = useSelector((state) => state.userDetails);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUserDetails(id));
+  }, [id]);
+  useEffect(() => {
+    if (state.user) {
+      setRole(state.user.role ?? "");
+      setCountry(state.user.country ?? "");
+      setCity(state.user.city ?? "");
+      setPostalCode(state.user.postalCode ?? "");
+      setDateOfBirth(state.user.dateOfBirth ?? "");
+      setPhone(state.user.phone?.phoneNumber ?? "");
+      setProfilePhoto(state.user.profilePhoto ?? loginImage);
+      setPassportPhoto(state.user.passportPhoto ?? "");
+      setCode(state.user.phone?.countryCode ?? "");
+      setDialCode(state.user.phone?.dialCode ?? "");
+    }
+    if (state.UserDetailsError) {
+      toast.error(state.UserDetailsError);
+    }
+    if (state.updateError) {
+      toast.error(state.updateError);
+    }
+    if (state.success) {
+      toast.success("User details updated successfully");
+    }
+   
+  }, [state]);
+
+  const updateUser = () => {
+    let updatedPhone = phone;
+    if (!phone.startsWith("+")) {
+      updatedPhone = `+${dialCode}${phone}`;
+      setPhone(updatedPhone);  
+    }
+  
+    console.log("Updated Phone:", updatedPhone);
+    console.log("updateUser");
+  
+    dispatch(
+      updateUserDetails({
+        userId: id,
+        role: role,
+        country: country,
+        city: city,
+        postalCode: postalCode,
+        dateOfBirth: dateOfBirth,
+        phone: updatedPhone,  
+        profilePhoto: profilePhoto,
+        passportPhoto: passportPhoto,
+      })
+    );
+  };
+  
   const [role, setRole] = useState("");
   const [country, setCountry] = useState("");
   const [cities, setCities] = useState([]);
@@ -33,101 +93,8 @@ export default function UserDetails() {
   const [phone, setPhone] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(loginImage);
   const [passportPhoto, setPassportPhoto] = useState("");
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  async function getUserDetails() {
-    try {
-      const response = await axiosInstance.get(`user/${id}`);
-      const { user } = response.data;
-      setUserObject(user);
-      localStorage.setItem("userDetails", JSON.stringify(user));
-      setRole(user.role || "");
-      setCountry(user.country || "");
-      setCity(user.city || "");
-      setPostalCode(user.postalCode || "");
-      setDateOfBirth(user.dateOfBirth || "");
-      const formattedPhone = user.phone?.phoneNumber
-        ? `+${user.phone.phoneNumber}`
-        : "";
-      setPhone(formattedPhone);
-      if (user.profilePhoto)
-        setProfilePhoto(`data:image/png;base64,${user.profilePhoto}`);
-      if (user.passportPhoto)
-        setPassportPhoto(`data:image/png;base64,${user.passportPhoto}`);
-    } catch (error) {
-      toast.error(
-        "Failed to fetch user details: " +
-          (error.response?.data?.message || error.message)
-      );
-    }
-  }
-
-  async function updateUser() {
-    setIsUpdating(true);
-    try {
-      if (!isValidPhoneNumber(phone)) {
-        toast.error("Please enter a valid phone number", {
-          position: "top-center",
-          autoClose: 1000,
-        });
-        return;
-      }
-
-      const updateData = {
-        dob: dateOfBirth,
-        address: userObject.address,
-        city: city,
-        country: country,
-        phone: phone,
-        postalCode: postalCode,
-        ip: userObject.ip,
-      };
-
-      const response = await axiosInstance.patch(`user/${id}`, updateData);
-      toast.success("User updated successfully!", {
-        position: "top-center",
-        autoClose: 1000,
-      });
-      const updatedUser = { ...userObject, ...updateData };
-      localStorage.setItem("userDetails", JSON.stringify(updatedUser));
-      setUserObject(updatedUser);
-    } catch (error) {
-      toast.error(
-        "Failed to update user: " +
-          (error.response?.data?.message || error.message),
-        { position: "top-center", autoClose: 1000 }
-      );
-      console.error(
-        "Update User error:",
-        error.response?.data || error.message
-      );
-    } finally {
-      setIsUpdating(false);
-    }
-  }
-
-  useEffect(() => {
-    const storedUserDetails = localStorage.getItem("userDetails");
-    if (storedUserDetails) {
-      const user = JSON.parse(storedUserDetails);
-      setUserObject(user);
-      setRole(user.role || "");
-      setCountry(user.country || "");
-      setCity(user.city || "");
-      setPostalCode(user.postalCode || "");
-      setDateOfBirth(user.dateOfBirth || "");
-      const formattedPhone = user.phone?.phoneNumber
-        ? `+${user.phone.phoneNumber}`
-        : "";
-      setPhone(formattedPhone);
-      if (user.profilePhoto)
-        setProfilePhoto(`${user.profilePhoto}`);
-      if (user.passportPhoto)
-        setPassportPhoto(`${user.passportPhoto}`);
-    } else {
-      getUserDetails();
-    }
-  }, [id]);
+  const [countryCode, setCode] = useState("");
+  const [dialCode, setDialCode] = useState("");
 
   useEffect(() => {
     if (country) {
@@ -149,7 +116,7 @@ export default function UserDetails() {
     }
   };
 
-  if (!userObject) return <Loading/>;
+  // if (!user) return <Loading/>;
 
   const CustomPhoneInput = React.forwardRef((props, ref) => (
     <TextField
@@ -160,6 +127,7 @@ export default function UserDetails() {
       variant="outlined"
     />
   ));
+  console.log({ phone, country, city, role }, "phone, country, city, role");
 
   return (
     <div className="w-full">
@@ -177,11 +145,17 @@ export default function UserDetails() {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
         <div className="md:col-span-3 p-3">
-          <img
-            src={userObject.profilePhoto!==null?userObject.profilePhoto:loginImage}
-            alt="User Avatar"
-            className="w-full mb-3 rounded-md border-2"
-          />
+          {state.UserDetailsLoading ? (
+            <div className="flex justify-center items-center w-full mb-3 rounded-md border-2 h-60 bg-gray-200">
+              <Loading />
+            </div>
+          ) : (
+            <img
+              src={profilePhoto !== null ? profilePhoto : loginImage}
+              alt="User Avatar"
+              className="w-full mb-3 rounded-md border-2"
+            />
+          )}
           <input
             type="file"
             id="uploadProfile"
@@ -202,10 +176,10 @@ export default function UserDetails() {
 
         <div className="md:col-span-9 pt-5 px-3">
           <h1 className="font-bold text-3xl md:text-5xl text-slate-700">
-            {userObject.firstName} {userObject.lastName}
+            {state.user.firstName} {state.user.lastName}
           </h1>
           <p className="text-slate-500 text-xl md:text-2xl">
-            {userObject.email}
+            {state.user.email}
           </p>
         </div>
       </div>
@@ -214,25 +188,25 @@ export default function UserDetails() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextField
             fullWidth
-            label="User ID"
+            placeholder="User ID"
             variant="outlined"
-            value={userObject.id}
+            value={state.user?.id ?? ""}
             disabled
           />
           <TextField
             fullWidth
-            label="Email"
+            placeholder="Email"
             variant="outlined"
-            value={userObject.email}
+            value={state.user.email}
             disabled
           />
 
           <FormControl fullWidth>
             <FormLabel>Country</FormLabel>
             <Select
-              value={country}
+              value={country ?? ""}
               onChange={(e) => setCountry(e.target.value)}
-              disabled={countriesLoading}
+              disabled={countriesLoading || !countries.length}
             >
               {countriesLoading ? (
                 <MenuItem disabled>Loading...</MenuItem>
@@ -249,7 +223,7 @@ export default function UserDetails() {
           <FormControl fullWidth>
             <FormLabel>City</FormLabel>
             <Select
-              value={city}
+              value={city ?? ""}
               onChange={(e) => setCity(e.target.value)}
               disabled={!cities.length}
             >
@@ -267,39 +241,41 @@ export default function UserDetails() {
 
           <TextField
             fullWidth
-            label="Postal Code"
+            placeholder="Postal Code"
             variant="outlined"
             value={postalCode}
             onChange={(e) => setPostalCode(e.target.value)}
           />
           <TextField
             fullWidth
-            label="Birth Date"
+            placeholder="YYYY-MM-DD"
             type="date"
             InputLabelProps={{ shrink: true }}
             variant="outlined"
-            value={dateOfBirth}
+            value={dateOfBirth || ""}
             onChange={(e) => setDateOfBirth(e.target.value)}
           />
 
           <FormControl fullWidth>
             <FormLabel>Role</FormLabel>
-            <Select value={role} onChange={(e) => setRole(e.target.value)}>
+            <Select
+              value={role ?? ""}
+              onChange={(e) => setRole(e.target.value)}
+            >
               <MenuItem value="customer">Customer</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
             </Select>
           </FormControl>
 
-          <FormControl fullWidth>
-            <FormLabel>Phone</FormLabel>
-            <PhoneInput
-              international
-              defaultCountry="US"
-              value={phone}
-              onChange={setPhone}
-              inputComponent={CustomPhoneInput}
-            />
-          </FormControl>
+          <PhoneInputComponent
+            initialPhone={dialCode && phone ? `+${dialCode}${phone}` : ""}
+            onPhoneChange={(value) => {
+              setPhone(value);
+              const parsedDialCode = value?.split(" ")[0].replace("+", "");
+              setDialCode(parsedDialCode);
+              console.log("Phone Updated:", value);
+            }}
+          />
         </div>
 
         <div className="mt-6">
@@ -339,9 +315,9 @@ export default function UserDetails() {
           className="mt-4 !bg-green-500 hover:bg-green-600 text-white w-full"
           fullWidth
           onClick={updateUser}
-          disabled={isUpdating}
+          disabled={state.updateLoading}
         >
-          {isUpdating ? (
+          {state.updateLoading ? (
             <CircularProgress size={24} className="!text-white" />
           ) : (
             "Update User"

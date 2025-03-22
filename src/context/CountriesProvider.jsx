@@ -30,7 +30,7 @@ export function CountriesProvider({ children }) {
     </CountriesContext.Provider>
   );
 }
-
+export default CountriesContext;
 export function useCountries() {
   return useContext(CountriesContext);
 }

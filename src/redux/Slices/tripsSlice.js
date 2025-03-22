@@ -34,7 +34,7 @@ const tripsSlice= createSlice({
         })
         .addCase(fetchTrips.rejected,(state,action)=>{
             state.TripsLoading=false;
-            state.tripsError=action.payload;
+            state.tripsError=action.error.message;
         })
     }
 
