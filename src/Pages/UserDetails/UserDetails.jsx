@@ -1,8 +1,6 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CloudUpload } from "@mui/icons-material";
 import loginImage from "../../assets/Images/loginImage.png";
-import axiosInstance from "../../Utils/axiosInstance";
-import { useCountries } from "../../context/CountriesProvider";
 import {
   TextField,
   MenuItem,
@@ -11,79 +9,22 @@ import {
   FormControl,
   FormLabel,
   CircularProgress,
-  Skeleton,
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { isValidPhoneNumber } from "react-phone-number-input";
 import { useParams } from "react-router-dom";
 import Loading from "../../Componente/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getUserDetails,
-  updateUserDetails,
-} from "../../redux/Slices/UserDetailsSlice";
+import { getUserDetails, updateUserDetails } from "../../redux/Slices/UserDetailsSlice";
 import PhoneInputComponent from "../../Componente/PhoneInputComponent/PhoneInputComponent";
+import { useCountries } from "../../context/CountriesProvider";
+
 export default function UserDetails() {
   const { id } = useParams();
   const { countries, loading: countriesLoading } = useCountries();
   const state = useSelector((state) => state.userDetails);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getUserDetails(id));
-  }, [id]);
-  useEffect(() => {
-    if (state.user) {
-      setRole(state.user.role ?? "");
-      setCountry(state.user.country ?? "");
-      setCity(state.user.city ?? "");
-      setPostalCode(state.user.postalCode ?? "");
-      setDateOfBirth(state.user.dateOfBirth ?? "");
-      setPhone(state.user.phone?.phoneNumber ?? "");
-      setProfilePhoto(state.user.profilePhoto ?? loginImage);
-      setPassportPhoto(state.user.passportPhoto ?? "");
-      setCode(state.user.phone?.countryCode ?? "");
-      setDialCode(state.user.phone?.dialCode ?? "");
-    }
-    if (state.UserDetailsError) {
-      toast.error(state.UserDetailsError);
-    }
-    if (state.updateError) {
-      toast.error(state.updateError);
-    }
-    if (state.success) {
-      toast.success("User details updated successfully");
-    }
-   
-  }, [state]);
-
-  const updateUser = () => {
-    let updatedPhone = phone;
-    if (!phone.startsWith("+")) {
-      updatedPhone = `+${dialCode}${phone}`;
-      setPhone(updatedPhone);  
-    }
-  
-    console.log("Updated Phone:", updatedPhone);
-    console.log("updateUser");
-  
-    dispatch(
-      updateUserDetails({
-        userId: id,
-        role: role,
-        country: country,
-        city: city,
-        postalCode: postalCode,
-        dateOfBirth: dateOfBirth,
-        phone: updatedPhone,  
-        profilePhoto: profilePhoto,
-        passportPhoto: passportPhoto,
-      })
-    );
-  };
-  
   const [role, setRole] = useState("");
   const [country, setCountry] = useState("");
   const [cities, setCities] = useState([]);
@@ -97,6 +38,36 @@ export default function UserDetails() {
   const [dialCode, setDialCode] = useState("");
 
   useEffect(() => {
+    dispatch(getUserDetails(id));
+  }, [ id]);
+
+  useEffect(() => {
+    if (state.user) {
+      setRole(state.user.role ?? "");
+      setCountry(state.user.country ?? "");
+      setCity(state.user.city ?? "");
+      setPostalCode(state.user.postalCode ?? "");
+      setDateOfBirth(state.user.dateOfBirth ?? "");
+      setPhone(state.user.phone?.phoneNumber ?? "");
+      setProfilePhoto(state.user.profilePhoto ?? loginImage);
+      setPassportPhoto(state.user.passportPhoto ?? "");
+      setCode(state.user.phone?.countryCode ?? "");
+      setDialCode(state.user.phone?.dialCode ?? "");
+    }
+    console.log(state.user, "state.user");
+    
+    if (state.UserDetailsError) {
+      toast.error(state.UserDetailsError);
+    }
+    if (state.updateError) {
+      toast.error(state.updateError);
+    }
+    if (state.success) {
+      toast.success("User details updated successfully");
+    }
+  }, [state]);
+
+  useEffect(() => {
     if (country) {
       const selectedCountry = countries.find((c) => c.iso2 === country);
       const newCities = selectedCountry?.states || [];
@@ -107,6 +78,31 @@ export default function UserDetails() {
     }
   }, [country, countries]);
 
+  const updateUser = () => {
+    let updatedPhone = phone;
+    if (!phone.startsWith("+")) {
+      updatedPhone = `+${dialCode}${phone}`;
+      setPhone(updatedPhone);
+    }
+
+    console.log("Updated Phone:", updatedPhone);
+    console.log("updateUser");
+
+    dispatch(
+      updateUserDetails({
+        userId: id,
+        role: role,
+        country: country,
+        city: city,
+        postalCode: postalCode,
+        dateOfBirth: dateOfBirth,
+        phone: updatedPhone,
+        profilePhoto: profilePhoto,
+        passportPhoto: passportPhoto,
+      })
+    );
+  };
+
   const handleFileUpload = (event, setImageFunction) => {
     const file = event.target.files[0];
     if (file) {
@@ -116,18 +112,20 @@ export default function UserDetails() {
     }
   };
 
-  // if (!user) return <Loading/>;
+  const handlePassportUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPassportPhoto(reader.result.split(",")[1]);
+      console.log(passportPhoto, "passportPhoto");
+      
+      reader.readAsDataURL(file);
+    }
+  };
 
-  const CustomPhoneInput = React.forwardRef((props, ref) => (
-    <TextField
-      {...props}
-      inputRef={ref}
-      fullWidth
-      label="Phone"
-      variant="outlined"
-    />
-  ));
-  console.log({ phone, country, city, role }, "phone, country, city, role");
+  
+
+  if (state.UserDetailsLoading) return <Loading />;
 
   return (
     <div className="w-full">
@@ -296,7 +294,7 @@ export default function UserDetails() {
             type="file"
             id="uploadPassport"
             className="hidden"
-            onChange={(e) => handleFileUpload(e, setPassportPhoto)}
+            onChange={handlePassportUpload}
           />
           <label htmlFor="uploadPassport">
             <Button

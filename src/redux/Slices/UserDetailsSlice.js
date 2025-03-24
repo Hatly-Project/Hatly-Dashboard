@@ -43,6 +43,7 @@ const userDetailsSlice = createSlice({
         .addCase(getUserDetails.fulfilled, (state, action) => {
             state.UserDetailsLoading = false;
             state.user = action.payload;
+            state.success = false;
         })
         .addCase(getUserDetails.rejected, (state, action) => {
             state.UserDetailsLoading = false;
@@ -52,11 +53,10 @@ const userDetailsSlice = createSlice({
             state.updateLoading = true;
             state.updateError = null;
             state.success = false;
-            // state.user = action.payload;
         })
         .addCase(updateUserDetails.fulfilled, (state, action) => {
             state.updateLoading = false;
-            state.user= action.payload;
+            state.user= action.payload.user;
             state.success = true;
         })
         .addCase(updateUserDetails.rejected, (state, action) => {
