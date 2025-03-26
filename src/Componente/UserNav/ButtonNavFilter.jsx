@@ -1,127 +1,434 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';    
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Button from "@mui/material/Button";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import RadioGroup from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
+import Divider from "@mui/material/Divider";
+import { Label } from "@mui/icons-material";
+import { useState } from "react";
+import { useCountries } from "../../context/CountriesProvider";
+import { FormLabel, IconButton } from "@mui/material";
+import { GridDeleteIcon } from "@mui/x-data-grid";
+import CloseIcon from "@mui/icons-material/Close";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../../redux/Slices/usersSlice";
+import PhoneInputComponent from "../PhoneInputComponent/PhoneInputComponent";
 
-export default function ButtonNavFilter() {
-  const [open, setOpen] = React.useState(false);
+export default function AccountMenu() {
+  const { users } = useSelector((state) => state.users);
 
-  const handleClickOpen = () => {
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [email, setEmail] = useState("");
+  const [city, setCity] = useState("");
+  const [cities, setCities] = useState([]);
+  const [country, setCountry] = useState("");
+  const [role, setRole] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [phone, setPhone] = useState("");
+  const { countries, loading: countriesLoading } = useCountries();
+  const [isVerified, setIsVerified] = useState(null);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (country) {
+      const selectedCountry = countries.find((c) => c.iso2 === country);
+      const newCities = selectedCountry?.states || [];
+      setCities(newCities);
+      if (!newCities.some((c) => c.name === city)) {
+        setCity("");
+      }
+    }
+  }, [country, countries]);
+
+  const handleClick = (e) => {
     setOpen(true);
+    setAnchorEl(e.currentTarget);
   };
-
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleClearCountry = () => {
+    setCountry("");
+    setCity("");
+    setCities([]);
+  };
+  const handleClearCity = () => {
+    setCity("");
+  };
+  const handleClearRole = () => {
+    setRole("");
+  };
+  const handleClearDOB = () => {
+    setDateOfBirth("");
+  };
+  const handleClearEmail = () => {
+    setEmail("");
+  };
+  const handleClearPhone = () => {
+    setPhone("");
+  };
+  const handleClearFilters = () => {
+    handleClearCountry();
+    handleClearCity();
+    handleClearRole();
+    handleClearDOB();
+    handleClearEmail();
+    handleClearPhone();
+  };
+  useEffect(() => {
+    handleFilters();
+  }, [isVerified, email, phone, country, city, role, dateOfBirth]);
+
+  const handleFilters = () => {
+    const filteredUsers = users.filter((user) => {
+      return (
+        (email
+          ? user.email.toLowerCase().includes(email.toLowerCase())
+          : true) &&
+        (country ? user.country === country : true) &&
+        (city ? user.city === city : true) &&
+        (phone ? user.phone?.phoneNumber.includes(phone) : true) &&
+        (role ? user.role === role : true) &&
+        (dateOfBirth ? user.dateOfBirth === dateOfBirth : true) &&
+        (isVerified !== null ? user.verify == isVerified : true)
+      );
+    });
+
+    dispatch(setUsers(filteredUsers));
   };
 
   return (
     <React.Fragment>
-          <button variant="outlined" onClick={handleClickOpen} style={{
-              backgroundColor: "white",
-              color: '#4141DA',
-              padding: '10px',
-              width: '100px',
-              fontWeight: 'bold',
-              borderRadius: '5px',
-              display:'flex',
-              alignItems: 'center',
-              border: '1px solid rgba(65, 65, 218, 1)',
-              justifyContent: 'center'
-          }}>
-              
-             <p>Filter</p>
-              <FilterAltOutlinedIcon/> 
-            
-      </button>
-      <Dialog
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+        <Button
+          onClick={handleClick}
+          sx={{
+            ml: 1,
+            color: "#4141DA",
+            fontSize: "17px",
+            fontWeight: "bold",
+            padding: "5px 20px",
+            borderRadius: "5px",
+            border: "1px solid #4141DA",
+          }}
+          aria-controls={open ? "account-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+        >
+          Filter
+          <FilterAltIcon sx={{ ml: 1 }} />
+        </Button>
+      </Box>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
         open={open}
         onClose={handleClose}
+        // onClick={handleClose}
         slotProps={{
           paper: {
-            component: 'form',
-            onSubmit: (event) => {
-              event.preventDefault();
-              const formData = new FormData(event.currentTarget);
-              const formJson = Object.fromEntries(formData.entries());
-              const email = formJson.email;
-              console.log(email);
-              handleClose();
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              p: 2,
+              minWidth: "300px",
             },
           },
         }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <DialogTitle>   
-            <p>Filter</p>
-             
-        </DialogTitle>
-        <DialogContent sx={{ width: '400px'}}>
-            <div className='flex flex-col gap-2 mt-2'>
-            <TextField
-              label="Email"
-              name="email"
-              type="email"
-            />
-            <TextField
+        {/* Email */}
+        <MenuItem disableRipple>
+          <OutlinedInput
+            fullWidth
+            placeholder="Email"
+            type="email"
+            size="small"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+
+              console.log(email, "email");
+            }}
+            endAdornment={
+              email && (
+                <IconButton
+                  size="small"
+                  sx={{ color: "red" }}
+                  onClick={handleClearEmail}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              )
+            }
+          />
+        </MenuItem>
+        {/* Country */}
+        <MenuItem disableRipple>
+          <FormControl fullWidth>
+            <InputLabel id="country-select-label"> Country</InputLabel>
+            <Select
+              labelId="country-select-label"
               label="Country"
-              name="country" 
-            />
-            <TextField
+              value={country ?? ""}
+              onChange={(e) => {
+                setCountry(e.target.value);
+
+                console.log(country, "country");
+              }}
+              disabled={countriesLoading || !countries.length}
+              endAdornment={
+                country && (
+                  <IconButton
+                    size="small"
+                    sx={{ color: "red" }}
+                    onClick={handleClearCountry}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                )
+              }
+            >
+              {countriesLoading ? (
+                <MenuItem disabled>Loading...</MenuItem>
+              ) : (
+                countries.map((c) => (
+                  <MenuItem key={c.iso2} value={c.iso2}>
+                    {c.name}
+                  </MenuItem>
+                ))
+              )}
+            </Select>
+          </FormControl>
+        </MenuItem>
+        {/* City */}
+        <MenuItem disableRipple>
+          <FormControl fullWidth>
+            <InputLabel id="city-select-label">City</InputLabel>
+            <Select
+              labelId="city-select-label"
               label="City"
-              name="city"
+              value={city ?? ""}
+              onChange={(e) => {
+                setCity(e.target.value);
+
+                console.log(city, "city");
+              }}
+              disabled={!cities.length}
+              endAdornment={
+                city && (
+                  <IconButton
+                    size="small"
+                    sx={{ color: "red", marginRight: "15px" }}
+                    onClick={handleClearCity}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                )
+              }
+            >
+              {cities.length > 0 ? (
+                cities.map((s) => (
+                  <MenuItem key={s.name} value={s.name}>
+                    {s.name}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>Select a country first</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </MenuItem>
+        {/* Phone */}
+        <MenuItem disableRipple>
+          {/* <OutlinedInput
+            fullWidth
+            placeholder="Phone"
+            type="tel"
+            size="small"
+            value={phone}
+            onChange={(e) => {
+              setPhone(e.target.value);
+
+              console.log(phone, "phone");
+            }}
+            endAdornment={
+              phone && (
+                <IconButton
+                  size="small"
+                  sx={{ color: "red" }}
+                  onClick={handleClearPhone}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              )
+            }
+          /> */}
+          <Box sx={{ width: "100%" }}>
+            <PhoneInputComponent
+              onPhoneChange={(value) => {
+                const parsedPhone = value.slice(3);
+                setPhone(parsedPhone);
+              }}
             />
-            <TextField
-              label="Phone"
-              name="phone"
-              type="tel"
-            />
-            <TextField
+          </Box>
+        </MenuItem>
+        {/* Role */}
+        <MenuItem disableRipple>
+          <FormControl fullWidth size="small">
+            <InputLabel id="role-select-label">Role</InputLabel>
+            <Select
               label="Role"
-              name="role" 
+              labelId="role-select-label"
+              id="role-select"
+              value={role}
+              onChange={(e) => {
+                setRole(e.target.value);
+
+                console.log(role, "role");
+              }}
+              endAdornment={
+                role && (
+                  <IconButton
+                    size="small"
+                    sx={{ color: "red", marginRight: "15px" }}
+                    onClick={handleClearRole}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                )
+              }
+            >
+              <MenuItem value="admin">admin</MenuItem>
+              <MenuItem value="customer">customer</MenuItem>
+            </Select>
+          </FormControl>
+        </MenuItem>
+        {/* Birth Date */}
+        <MenuItem disableRipple>
+          <OutlinedInput
+            fullWidth
+            placeholder="Birth Date"
+            type="date"
+            size="small"
+            value={dateOfBirth}
+            onChange={(e) => {
+              setDateOfBirth(e.target.value);
+
+              console.log(dateOfBirth, "dateOfBirth");
+            }}
+            endAdornment={
+              dateOfBirth && (
+                <IconButton
+                  size="small"
+                  sx={{ color: "red" }}
+                  onClick={handleClearDOB}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              )
+            }
+          />
+        </MenuItem>
+        {/* Verification */}
+        {/* <MenuItem disableRipple>
+          <RadioGroup
+            row
+            value={isVerified}
+            onChange={(e) => {
+              setIsVerified(e.target.value === "true");
+
+              console.log(isVerified, "isVerified");
+            }}
+          >
+            <FormControlLabel
+              value={true}
+              control={<Radio />}
+              label="Verified"
+              onClick={() => setIsVerified(true)}
             />
-            <TextField
-              label="Birthdate"
-              name="birthdate"
-                      />
-            <RadioGroup
-             defaultValue="female"
-                name="radio-buttons-group"
-                sx={{ display: 'flex', flexDirection: 'row', gap: '10px'}}
-             >
-             <FormControlLabel value="Verified" control={<Radio />} label="Verified" />
-             <FormControlLabel value="Non Verified" control={<Radio />} label="Non Verified" />
-             </RadioGroup>
-            </div>
-        </DialogContent>
-        <DialogActions>
-        <button onClick={handleClose}
-            style={{
-              backgroundColor: 'rgba(65, 65, 218, 1)',
-              color: 'white',
-              padding: '10px',
-              width: '100px',
-              borderRadius: '5px'
-            }}>
-                 Reset
-        </button>
-          <button style={{
-              backgroundColor: 'red',
-              color: 'white',
-              padding: '10px',
-              width: '200px',
-              borderRadius: '5px'
-            }}>Clear all filters</button>
-        </DialogActions>
-      </Dialog>
+            <FormControlLabel
+              value={false}
+              control={<Radio />}
+              label="Not Verified"
+              onClick={() => setIsVerified(false)}
+            />
+          </RadioGroup>
+          <MenuItem disableRipple>
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                setIsVerified(null);
+              }}
+            >
+              Reset
+            </Button>
+          </MenuItem>
+        </MenuItem> */}
+        <Box sx={{ px: 3 , display: "flex" , alignItems: "center" }}>
+          <RadioGroup
+            row
+            value={isVerified}
+            onChange={(e) => {
+              setIsVerified(e.target.value === "true");
+            }}
+          >
+            <FormControlLabel
+              value={true}
+              control={<Radio />}
+              label="Verified"
+              onClick={() => setIsVerified(true)}
+            />
+            <FormControlLabel
+              value={false}
+              control={<Radio />}
+              label="Not Verified"
+              onClick={() => setIsVerified(false)}
+            />
+          </RadioGroup>
+          <Box mt={1}>
+            <Button
+              fullWidth
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                setIsVerified(null);
+              }}
+            >
+              Reset
+            </Button>
+          </Box>
+        </Box>
+
+        <Divider sx={{ my: 1 }} />
+        {/* Reset Button */}
+        <MenuItem disableRipple>
+          <Button
+            fullWidth
+            variant="contained"
+            color="error"
+            sx={{ fontWeight: "bold" }}
+            onClick={handleClearFilters}
+          >
+            Clear Filters
+          </Button>
+        </MenuItem>
+      </Menu>
     </React.Fragment>
   );
 }

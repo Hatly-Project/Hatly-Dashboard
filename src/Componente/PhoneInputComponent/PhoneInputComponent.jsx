@@ -3,6 +3,7 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { TextField } from "@mui/material";
 import { toast } from "react-toastify";
+import { WidthFull } from "@mui/icons-material";
 
 // Custom input for Material UI
 const CustomPhoneInput = React.forwardRef((props, ref) => (
@@ -35,7 +36,7 @@ export default function PhoneInputComponent({ initialPhone, onPhoneChange }) {
 
   return (
     <PhoneInput
-    style={{alignItems: 'end',}}
+    style={{alignItems: 'end'}}
       placeholder="Enter phone number"
       international
       value={temporaryPhone}

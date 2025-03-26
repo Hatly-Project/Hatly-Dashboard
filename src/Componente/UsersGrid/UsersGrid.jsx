@@ -242,8 +242,7 @@ const handleDownloadPassport = async () => {
                     <span>{user.id}</span>
                   </Tooltip>
                 </td>
-                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
-                  <div className="flex items-center gap-2">
+                <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600 flex items-center gap-2">
                     {user.profilePhoto == null ? (
                       <AccountCircleOutlinedIcon
                         sx={{ width: "24px", height: "24px" }}
@@ -256,7 +255,7 @@ const handleDownloadPassport = async () => {
                     )}
                     <div>
                       <div className="text-xs md:text-sm">{user.firstName}</div>
-                      <td
+                      <div
                         className="text-xs md:text-sm text-gray-600 cursor-pointer hover:text-blue-500"
                         onClick={() => handleCopyEmail(user.email)}
                       >
@@ -269,7 +268,7 @@ const handleDownloadPassport = async () => {
                         >
                           <span>{user.email}</span>
                         </Tooltip>
-                      </td>
+                      </div>
                       <Stack spacing={1}>
                         <Rating
                           name="half-rating-read"
@@ -279,7 +278,6 @@ const handleDownloadPassport = async () => {
                         />
                       </Stack>
                     </div>
-                  </div>
                 </td>
                 <td className="px-4 py-2 border-b text-xs md:text-sm text-gray-600">
                   {0 + user.phone?.phoneNumber || "N/A"}

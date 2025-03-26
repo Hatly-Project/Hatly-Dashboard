@@ -23,6 +23,8 @@ const usersSlice = createSlice({
   reducers: {
     setUsers: (state, action) => {
       state.users = action.payload; // Update the users list
+      console.log( state.users , "users");
+      
     },
   },
   extraReducers: (builder) => {
