@@ -7,11 +7,21 @@ import { WidthFull } from "@mui/icons-material";
 
 // Custom input for Material UI
 const CustomPhoneInput = React.forwardRef((props, ref) => (
-  <TextField {...props} inputRef={ref} fullWidth label="Phone" variant="outlined" />
+  <TextField
+    {...props}
+    inputRef={ref}
+    fullWidth
+    label="Phone"
+    variant="outlined"
+  />
 ));
 
 // Separate Phone Input Component
-export default function PhoneInputComponent({ initialPhone, onPhoneChange }) {
+export default function PhoneInputComponent({
+  initialPhone,
+  onPhoneChange,
+  isFitler,
+}) {
   const [temporaryPhone, setTemporaryPhone] = useState(initialPhone || "");
 
   // Sync with initialPhone when it changes
@@ -21,22 +31,42 @@ export default function PhoneInputComponent({ initialPhone, onPhoneChange }) {
 
   // Handle phone change (no re-render outside)
   const handlePhoneChange = (value) => {
-    setTemporaryPhone(value);
+    if (isFitler) {
+      onPhoneChange(temporaryPhone);
+      setTemporaryPhone(value);
+    } else {
+      setTemporaryPhone(value);
+    }
   };
 
   // Only update when leaving the input
   const handlePhoneBlur = () => {
-    if (isValidPhoneNumber(temporaryPhone)) {
-      onPhoneChange(temporaryPhone);  
+    if (isFitler) {
+      onPhoneChange(temporaryPhone);
     } else {
-      toast.error("Invalid phone number");
-      onPhoneChange("");
+      if (isValidPhoneNumber(temporaryPhone)) {
+        onPhoneChange(temporaryPhone);
+      } else {
+        toast.error("Invalid phone number");
+        onPhoneChange("");
+      }
     }
   };
-
+  if (isFitler) {
+    return (
+      <PhoneInput
+        style={{ alignItems: "end" }}
+        placeholder="Enter phone number"
+        international
+        value={temporaryPhone}
+        onChange={handlePhoneChange}
+        inputComponent={CustomPhoneInput}
+      />
+    );
+  }
   return (
     <PhoneInput
-    style={{alignItems: 'end'}}
+      style={{ alignItems: "end" }}
       placeholder="Enter phone number"
       international
       value={temporaryPhone}

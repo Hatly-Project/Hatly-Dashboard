@@ -351,7 +351,7 @@ const handleDownloadPassport = async () => {
         <div>
           <label
             htmlFor="rowsPerPage"
-            className="mr-2 text-xs md:text-sm font-medium text-gray-700"
+            className="mx-3 text-xs md:text-sm font-medium text-gray-700"
           >
             Rows per page:
           </label>

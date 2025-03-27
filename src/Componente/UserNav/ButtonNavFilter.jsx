@@ -12,15 +12,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import Radio from "@mui/material/Radio";
 import Divider from "@mui/material/Divider";
-import { Label } from "@mui/icons-material";
 import { useState } from "react";
 import { useCountries } from "../../context/CountriesProvider";
-import { FormLabel, IconButton } from "@mui/material";
-import { GridDeleteIcon } from "@mui/x-data-grid";
+import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers } from "../../redux/Slices/usersSlice";
+import { resetUsers, setUsers } from "../../redux/Slices/usersSlice";
 import PhoneInputComponent from "../PhoneInputComponent/PhoneInputComponent";
 
 export default function AccountMenu() {
@@ -86,7 +84,18 @@ export default function AccountMenu() {
     handleClearPhone();
   };
   useEffect(() => {
+   if (
+    email ||
+    phone ||
+    country ||
+    city ||
+    role ||
+    dateOfBirth
+   ) {
     handleFilters();
+   }else{
+    dispatch(resetUsers());
+   }
   }, [isVerified, email, phone, country, city, role, dateOfBirth]);
 
   const handleFilters = () => {
@@ -279,9 +288,14 @@ export default function AccountMenu() {
           /> */}
           <Box sx={{ width: "100%" }}>
             <PhoneInputComponent
+            isFitler={true}
               onPhoneChange={(value) => {
+               if (value) {
                 const parsedPhone = value.slice(3);
                 setPhone(parsedPhone);
+               }else{
+                setPhone("");
+               }
               }}
             />
           </Box>
