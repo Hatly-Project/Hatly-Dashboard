@@ -18,11 +18,11 @@ import { IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetUsers, setUsers } from "../../redux/Slices/usersSlice";
+import { setFilteredUsers } from "../../redux/Slices/usersSlice";
 import PhoneInputComponent from "../PhoneInputComponent/PhoneInputComponent";
 
 export default function AccountMenu() {
-  const { users } = useSelector((state) => state.users);
+  let { users, filteredUsers } = useSelector((state) => state.users);
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -35,6 +35,8 @@ export default function AccountMenu() {
   const [phone, setPhone] = useState("");
   const { countries, loading: countriesLoading } = useCountries();
   const [isVerified, setIsVerified] = useState(null);
+  console.log(isVerified, "isVerified");
+console.log(typeof isVerified, "isVerified");
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -82,24 +84,30 @@ export default function AccountMenu() {
     handleClearDOB();
     handleClearEmail();
     handleClearPhone();
+    setIsVerified(null);
   };
   useEffect(() => {
-   if (
-    email ||
-    phone ||
-    country ||
-    city ||
-    role ||
-    dateOfBirth
-   ) {
-    handleFilters();
-   }else{
-    dispatch(resetUsers());
-   }
+    if (
+      email ||
+      phone ||
+      country ||
+      city ||
+      role ||
+      dateOfBirth ||
+      isVerified !== null
+    ) {
+      console.log(`hand`);
+
+      handleFilters();
+    } else {
+      dispatch(setFilteredUsers(users));
+    }
   }, [isVerified, email, phone, country, city, role, dateOfBirth]);
 
   const handleFilters = () => {
-    const filteredUsers = users.filter((user) => {
+    console.log("users");
+
+    filteredUsers = users.filter((user) => {
       return (
         (email
           ? user.email.toLowerCase().includes(email.toLowerCase())
@@ -109,11 +117,11 @@ export default function AccountMenu() {
         (phone ? user.phone?.phoneNumber.includes(phone) : true) &&
         (role ? user.role === role : true) &&
         (dateOfBirth ? user.dateOfBirth === dateOfBirth : true) &&
-        (isVerified !== null ? user.verify == isVerified : true)
+        (isVerified !== null ? user.verify === isVerified : true)
       );
     });
 
-    dispatch(setUsers(filteredUsers));
+    dispatch(setFilteredUsers(filteredUsers));
   };
 
   return (
@@ -288,14 +296,14 @@ export default function AccountMenu() {
           /> */}
           <Box sx={{ width: "100%" }}>
             <PhoneInputComponent
-            isFitler={true}
+              isFitler={true}
               onPhoneChange={(value) => {
-               if (value) {
-                const parsedPhone = value.slice(3);
-                setPhone(parsedPhone);
-               }else{
-                setPhone("");
-               }
+                if (value) {
+                  const parsedPhone = value.slice(3);
+                  setPhone(parsedPhone);
+                } else {
+                  setPhone("");
+                }
               }}
             />
           </Box>
@@ -394,25 +402,33 @@ export default function AccountMenu() {
             </Button>
           </MenuItem>
         </MenuItem> */}
-        <Box sx={{ px: 3 , display: "flex" , alignItems: "center" }}>
+        <Box sx={{ px: 3, display: "flex", alignItems: "center" }}>
           <RadioGroup
             row
             value={isVerified}
             onChange={(e) => {
-              setIsVerified(e.target.value === "true");
+               
+              
+              setIsVerified(() => {
+                if (e.target.value === "true") {
+                  
+                  return true;
+                } else {
+                  return false;
+                }
+              });
             }}
           >
             <FormControlLabel
               value={true}
               control={<Radio />}
               label="Verified"
-              onClick={() => setIsVerified(true)}
             />
             <FormControlLabel
               value={false}
               control={<Radio />}
               label="Not Verified"
-              onClick={() => setIsVerified(false)}
+              
             />
           </RadioGroup>
           <Box mt={1}>

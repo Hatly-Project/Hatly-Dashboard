@@ -107,7 +107,9 @@ export default function UserDetails() {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => setImageFunction(reader.result);
+      // reader.onloadend = () => setImageFunction(reader.result);
+      reader.onloadend = () => setImageFunction(reader.result.split(",")[1]);
+
       reader.readAsDataURL(file);
     }
   };

@@ -19,18 +19,13 @@ const usersSlice = createSlice({
     users: [],
     UsersLoading: false,
     UsersError: null,
-    copyUsers: [],
+    filteredUsers: [],
   },
   reducers: {
-    setUsers: (state, action) => {
-      state.users = action.payload; // Update the users list
-      console.log( state.users , "users");
-      
+     
+    setFilteredUsers: (state, action) => {
+      state.filteredUsers = action.payload;
     },
-    resetUsers: (state) => {
-      state.users = state.copyUsers; // Reset the users list
-    },
-    
   },
   extraReducers: (builder) => {
     builder
@@ -41,7 +36,7 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.UsersLoading = false;
         state.users = action.payload.users;
-        state.copyUsers = action.payload.users; 
+        state.filteredUsers = action.payload.users;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.UsersLoading = false;
@@ -50,5 +45,5 @@ const usersSlice = createSlice({
   },
 });
 export { fetchUsers };
-export const { setUsers , resetUsers } = usersSlice.actions;
+export const { setFilteredUsers } = usersSlice.actions;
 export default usersSlice.reducer;

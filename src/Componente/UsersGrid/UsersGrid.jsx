@@ -18,12 +18,12 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../Utils/axiosInstance";
-import { setUsers } from "../../redux/Slices/usersSlice"; // Import your Redux action to update users
+// import { setUsers } from "../../redux/Slices/usersSlice"; // Import your Redux action to update users
 import { saveAs } from "file-saver";
 
 export default function UsersGrid() {
   
-  const users = useSelector((state) => state.users.users);
+  const {users , filteredUsers} = useSelector((state) => state.users);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -174,7 +174,7 @@ const handleDownloadPassport = async () => {
   };
 
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const displayedUsers = users.slice(startIndex, startIndex + rowsPerPage);
+  const displayedUsers = filteredUsers.slice(startIndex, startIndex + rowsPerPage);
 
   return (
     <div className="w-full" onClick={handleCloseContextMenu}>
